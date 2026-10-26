@@ -1,0 +1,55 @@
+:root {
+  --color-principal: #3f51b5;
+  --color-fons: #f5f6fa;
+  --color-text: #222;
+  --radi: 8px;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  background: var(--color-fons);
+  color: var(--color-text);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: var(--color-principal);
+  color: white;
+}
+
+header h1 { margin-right: auto; }
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.graella {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.producte, aside {
+  background: white;
+  border-radius: var(--radi);
+  padding: 1rem;
+}
+
+button {
+  background: var(--color-principal);
+  color: white;
+  border: none;
+  border-radius: var(--radi);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+dialog { border: none; border-radius: var(--radi); max-width: 500px; }
+dialog label { display: block; margin-bottom: 0.5rem; }

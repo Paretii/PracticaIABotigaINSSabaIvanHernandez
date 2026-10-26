@@ -1,0 +1,18 @@
+{
+  "name": "botiga-copilot",
+  "version": "1.0.0",
+  "description": "Mini-botiga en línia per practicar la programació assistida amb GitHub Copilot",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning src/index.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch src/index.js",
+    "test": "node --disable-warning=ExperimentalWarning --test"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

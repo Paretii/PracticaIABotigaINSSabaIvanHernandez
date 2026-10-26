@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Botiga Copilot</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Botiga Copilot</h1>
+    <label for="filtre-categoria">Categoria</label>
+    <select id="filtre-categoria">
+      <option value="">Totes</option>
+      <option value="roba">Roba</option>
+      <option value="casa">Casa</option>
+      <option value="papereria">Papereria</option>
+    </select>
+  </header>
+
+  <main>
+    <section id="productes" class="graella"></section>
+
+    <aside>
+      <h2>Carret</h2>
+      <ul id="carret"></ul>
+      <p>Total: <strong id="total">0,00 €</strong></p>
+    </aside>
+  </main>
+
+  <dialog id="detall">
+    <h2 id="detall-nom"></h2>
+    <p id="detall-descripcio"></p>
+    <h3>Ressenyes</h3>
+    <ul id="ressenyes"></ul>
+
+    <form id="form-ressenya">
+      <h3>Escriu una ressenya</h3>
+      <label>Nom <input name="autor" required maxlength="50"></label>
+      <label>Ressenya <textarea name="text" required maxlength="500"></textarea></label>
+      <label>Puntuació <input name="puntuacio" type="number" min="1" max="5" required></label>
+      <button type="submit">Publica</button>
+    </form>
+    <button id="tanca">Tanca</button>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
