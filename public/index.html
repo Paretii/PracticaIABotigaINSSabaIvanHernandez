@@ -44,6 +44,14 @@
     <button id="tanca">Tanca</button>
   </dialog>
 
+  <footer>
+    <p>© <span id="any"></span> Botiga Copilot</p>
+    <p><a href="mailto:contacte@botiga.example.com">contacte@botiga.example.com</a></p>
+  </footer>
+
   <script src="app.js"></script>
+  <script>
+    document.getElementById('any').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
