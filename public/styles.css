@@ -42,6 +42,17 @@ main {
   padding: 1rem;
 }
 
+footer {
+  padding: 1rem 2rem;
+  text-align: center;
+  background: var(--color-principal);
+  color: white;
+  border-radius: var(--radi) var(--radi) 0 0;
+}
+
+footer p { margin: 0.25rem 0; }
+footer a { color: inherit; }
+
 button {
   background: var(--color-principal);
   color: white;
