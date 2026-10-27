@@ -51,5 +51,15 @@ button {
   cursor: pointer;
 }
 
+footer {
+  padding: 1rem 2rem;
+  background: var(--color-principal);
+  color: white;
+  text-align: center;
+}
+
+footer p { margin: 0.25rem 0; }
+footer a { color: white; }
+
 dialog { border: none; border-radius: var(--radi); max-width: 500px; }
 dialog label { display: block; margin-bottom: 0.5rem; }
