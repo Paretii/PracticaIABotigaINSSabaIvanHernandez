@@ -13,6 +13,6 @@ export function calcularTotal(items, descompte = 0) {
   for (const item of items) {
     subtotal += item.preu * item.quantitat;
   }
-  const total = subtotal - descompte;
+  const total = subtotal * (1 - descompte / 100);
   return Math.round(total * 100) / 100;
 }
