@@ -14,10 +14,20 @@ async function carregarProductes(categoria = '') {
       <button class="afegeix">Afegeix</button>
       <button class="veure">Ressenyes</button>
     `;
+    const valoracio = document.createElement('p');
+    valoracio.className = 'valoracio';
+    valoracio.textContent = textValoracio(p);
+    targeta.querySelector('p').after(valoracio);
     targeta.querySelector('.afegeix').addEventListener('click', () => afegirAlCarret(p));
     targeta.querySelector('.veure').addEventListener('click', () => obrirDetall(p));
     contenidor.appendChild(targeta);
   }
+}
+
+function textValoracio({ mitjana, numRessenyes }) {
+  if (numRessenyes === 0) return 'Sense ressenyes';
+  const paraula = numRessenyes === 1 ? 'ressenya' : 'ressenyes';
+  return `★ ${mitjana.toFixed(1).replace('.', ',')} (${numRessenyes} ${paraula})`;
 }
 
 async function afegirAlCarret(producte) {
