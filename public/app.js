@@ -49,7 +49,9 @@ async function actualitzarCarret() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ items: carret, descompte: 10 }),
   });
-  const { total } = await resposta.json();
+  const { subtotal, enviament, total } = await resposta.json();
+  document.querySelector('#subtotal').textContent = `${subtotal.toFixed(2)} €`;
+  document.querySelector('#enviament').textContent = `${enviament.toFixed(2)} €`;
   document.querySelector('#total').textContent = `${total.toFixed(2)} €`;
 }
 

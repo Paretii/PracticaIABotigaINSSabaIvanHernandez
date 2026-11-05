@@ -67,3 +67,42 @@ test('GET /api/productes arrodoneix la mitjana a 1 decimal', async () => {
     servidorPropi.close();
   }
 });
+
+async function demanarTotalCarret(cos) {
+  return fetch(`${base}/api/carret/total`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(cos),
+  });
+}
+
+test('POST /api/carret/total retorna subtotal, enviament i total', async () => {
+  const resposta = await demanarTotalCarret({ items: [{ preu: 15, quantitat: 3 }] });
+  assert.equal(resposta.status, 200);
+  assert.deepEqual(await resposta.json(), { subtotal: 45, enviament: 5.9, total: 50.9 });
+});
+
+test('POST /api/carret/total fa servir el pes dels items', async () => {
+  const resposta = await demanarTotalCarret({ items: [{ preu: 10, quantitat: 1, pes: 6 }] });
+  assert.deepEqual(await resposta.json(), { subtotal: 10, enviament: 9.9, total: 19.9 });
+});
+
+test('POST /api/carret/total aplica l\'enviament gratuït després del descompte', async () => {
+  const items = [{ preu: 60, quantitat: 1 }];
+  const senseDescompte = await demanarTotalCarret({ items });
+  assert.equal((await senseDescompte.json()).enviament, 0);
+  const ambDescompte = await demanarTotalCarret({ items, descompte: 20 });
+  assert.equal((await ambDescompte.json()).enviament, 3.9);
+});
+
+test('POST /api/carret/total retorna 400 si el descompte no és vàlid', async () => {
+  const resposta = await demanarTotalCarret({ items: [], descompte: 120 });
+  assert.equal(resposta.status, 400);
+  assert.deepEqual(await resposta.json(), { error: 'El descompte ha de ser entre 0 i 100' });
+});
+
+test('POST /api/carret/total retorna 400 si el pes no és vàlid', async () => {
+  const resposta = await demanarTotalCarret({ items: [{ preu: 10, quantitat: 1, pes: -2 }] });
+  assert.equal(resposta.status, 400);
+  assert.deepEqual(await resposta.json(), { error: 'El pes ha de ser un nombre positiu' });
+});
