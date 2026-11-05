@@ -99,7 +99,7 @@ async function carregarCategories() {
   const opcioTotes = document.createElement('option');
   opcioTotes.value = '';
   opcioTotes.textContent = 'Totes';
-  const opcions = categories.map((categoria) => {
+  const opcions = categories.map(({ categoria }) => {
     const opcio = document.createElement('option');
     opcio.value = categoria;
     opcio.textContent = categoria.charAt(0).toUpperCase() + categoria.slice(1);

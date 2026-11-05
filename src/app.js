@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { routerProductes } from './routes/productes.js';
 import { routerRessenyes } from './routes/ressenyes.js';
 import { routerCarret } from './routes/carret.js';
+import { routerCategories } from './routes/categories.js';
 
 const directori = path.dirname(fileURLToPath(import.meta.url));
 
@@ -20,6 +21,7 @@ export function crearApp(db) {
   app.use('/api/productes', routerProductes(db));
   app.use('/api/ressenyes', routerRessenyes(db));
   app.use('/api/carret', routerCarret());
+  app.use('/api/categories', routerCategories(db));
 
   return app;
 }
