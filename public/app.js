@@ -91,4 +91,22 @@ document.querySelector('#filtre-categoria').addEventListener('change', (e) => {
   carregarProductes(e.target.value);
 });
 
+async function carregarCategories() {
+  const resposta = await fetch('/api/categories');
+  if (!resposta.ok) return;
+  const categories = await resposta.json();
+  const desplegable = document.querySelector('#filtre-categoria');
+  const opcioTotes = document.createElement('option');
+  opcioTotes.value = '';
+  opcioTotes.textContent = 'Totes';
+  const opcions = categories.map((categoria) => {
+    const opcio = document.createElement('option');
+    opcio.value = categoria;
+    opcio.textContent = categoria.charAt(0).toUpperCase() + categoria.slice(1);
+    return opcio;
+  });
+  desplegable.replaceChildren(opcioTotes, ...opcions);
+}
+
+carregarCategories();
 carregarProductes();
