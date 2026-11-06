@@ -32,11 +32,13 @@ export function routerProductes(db) {
                       COUNT(r.id) AS numRessenyes
                FROM productes p
                LEFT JOIN ressenyes r ON r.producte_id = p.id`;
+    const parametres = [];
     if (categoria) {
-      sql += ` WHERE categoria = '${categoria}'`;
+      sql += ' WHERE categoria = ?';
+      parametres.push(categoria);
     }
     sql += ' GROUP BY p.id';
-    const productes = db.prepare(sql).all();
+    const productes = db.prepare(sql).all(...parametres);
     res.json(productes);
   });
 

@@ -68,9 +68,16 @@ async function obrirDetall(producte) {
 async function carregarRessenyes(producteId) {
   const resposta = await fetch(`/api/ressenyes?producteId=${producteId}`);
   const ressenyes = await resposta.json();
-  document.querySelector('#ressenyes').innerHTML = ressenyes
-    .map((r) => `<li><strong>${r.autor}</strong> (${r.puntuacio}/5): ${r.text}</li>`)
-    .join('');
+  const elements = ressenyes.map((r) => {
+    const element = document.createElement('li');
+    const autor = document.createElement('strong');
+    autor.textContent = r.autor;
+    const puntuacio = document.createTextNode(` (${r.puntuacio}/5): `);
+    const text = document.createTextNode(r.text);
+    element.append(autor, puntuacio, text);
+    return element;
+  });
+  document.querySelector('#ressenyes').replaceChildren(...elements);
 }
 
 document.querySelector('#form-ressenya').addEventListener('submit', async (e) => {
@@ -79,7 +86,11 @@ document.querySelector('#form-ressenya').addEventListener('submit', async (e) =>
   await fetch('/api/ressenyes', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...dades, producteId: producteActual.id }),
+    body: JSON.stringify({
+      ...dades,
+      puntuacio: Number(dades.puntuacio),
+      producteId: producteActual.id,
+    }),
   });
   e.target.reset();
   await carregarRessenyes(producteActual.id);

@@ -26,6 +26,13 @@ test('GET /api/productes?categoria=roba filtra per categoria', async () => {
   assert.ok(productes.every((p) => p.categoria === 'roba'));
 });
 
+test('GET /api/productes?categoria no permet injecció SQL', async () => {
+  const injeccio = "' UNION SELECT id, email, contrasenya, rol, 0, 0, 0 FROM usuaris--";
+  const resposta = await fetch(`${base}/api/productes?categoria=${encodeURIComponent(injeccio)}`);
+  assert.equal(resposta.status, 200);
+  assert.deepEqual(await resposta.json(), []);
+});
+
 test('GET /api/productes/:id retorna 404 si no existeix', async () => {
   const resposta = await fetch(`${base}/api/productes/999`);
   assert.equal(resposta.status, 404);
@@ -105,4 +112,65 @@ test('POST /api/carret/total retorna 400 si el pes no és vàlid', async () => {
   const resposta = await demanarTotalCarret({ items: [{ preu: 10, quantitat: 1, pes: -2 }] });
   assert.equal(resposta.status, 400);
   assert.deepEqual(await resposta.json(), { error: 'El pes ha de ser un nombre positiu' });
+});
+
+const ressenyaValida = { producteId: 5, autor: 'Anna', text: 'Escriu molt bé.', puntuacio: 4 };
+
+async function crearRessenya(cos) {
+  return fetch(`${base}/api/ressenyes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(cos),
+  });
+}
+
+async function comptarRessenyes(producteId) {
+  const resposta = await fetch(`${base}/api/ressenyes?producteId=${producteId}`);
+  return (await resposta.json()).length;
+}
+
+async function comprovarRebutjada(cos, missatge) {
+  const producteId = cos.producteId;
+  const abans = await comptarRessenyes(producteId);
+  const resposta = await crearRessenya(cos);
+  assert.equal(resposta.status, 400);
+  assert.deepEqual(await resposta.json(), { error: missatge });
+  assert.equal(await comptarRessenyes(producteId), abans);
+}
+
+test('POST /api/ressenyes desa una ressenya vàlida', async () => {
+  const resposta = await crearRessenya({ ...ressenyaValida, autor: '  Anna  ', text: ' Bona. ' });
+  assert.equal(resposta.status, 201);
+  const { id } = await resposta.json();
+  const llista = await fetch(`${base}/api/ressenyes?producteId=${ressenyaValida.producteId}`);
+  const ressenya = (await llista.json()).find((r) => r.id === id);
+  assert.equal(ressenya.autor, 'Anna');
+  assert.equal(ressenya.text, 'Bona.');
+  assert.equal(ressenya.puntuacio, 4);
+});
+
+test('POST /api/ressenyes rebutja una puntuació de 99', async () => {
+  await comprovarRebutjada(
+    { ...ressenyaValida, puntuacio: 99 },
+    'La puntuació ha de ser un enter entre 1 i 5'
+  );
+});
+
+test('POST /api/ressenyes rebutja una puntuació de 0', async () => {
+  await comprovarRebutjada(
+    { ...ressenyaValida, puntuacio: 0 },
+    'La puntuació ha de ser un enter entre 1 i 5'
+  );
+});
+
+test('POST /api/ressenyes rebutja un autor buit', async () => {
+  await comprovarRebutjada({ ...ressenyaValida, autor: '   ' }, "L'autor no pot estar buit");
+});
+
+test('POST /api/ressenyes rebutja un text buit', async () => {
+  await comprovarRebutjada({ ...ressenyaValida, text: '   ' }, 'El text no pot estar buit');
+});
+
+test('POST /api/ressenyes rebutja un producte inexistent', async () => {
+  await comprovarRebutjada({ ...ressenyaValida, producteId: 999 }, 'El producte no existeix');
 });
